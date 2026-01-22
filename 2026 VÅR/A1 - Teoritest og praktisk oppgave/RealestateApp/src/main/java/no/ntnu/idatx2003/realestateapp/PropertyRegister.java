@@ -40,9 +40,9 @@ public class PropertyRegister {
     }
 
     boolean success = false;
-    if (this.properties.containsKey(property.getPropertyIDAsString())) {
+    if (!this.properties.containsKey(property.getPropertyIDAsString())) {
       this.properties.put(property.getPropertyIDAsString(), property);
-      success = false;
+      success = true;
     }
     return success;
   }

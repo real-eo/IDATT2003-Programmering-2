@@ -11,7 +11,7 @@ package no.ntnu.idatx2003.realestateapp;
  */
 public class Property {
   private final int municipalityNumber; //A number between 101 (Halden) and 5054 (Indre Fosen)
-  private final String municipalityName = null;
+  private final String municipalityName;
   private final int lotNumber;
   private final int sectionNumber;
   private final String name;
@@ -30,8 +30,17 @@ public class Property {
    */
   public Property(int municipalityNumber, String municipalityName,
                   int lotNumber, int sectionNumber,
-                  String name, double area) {
+                  String name, double area) throws IllegalArgumentException {
+    // Guard conditions
+    if (municipalityName == null) {
+      throw new IllegalArgumentException("municipalityName cannot be null");
+    }
+    if (municipalityName.isBlank()) {
+      throw new IllegalArgumentException("municipalityName cannot be blank");
+    }
+    
     this.municipalityNumber = municipalityNumber;
+    this.municipalityName = municipalityName;
     this.lotNumber = lotNumber;
     this.sectionNumber = sectionNumber;
     this.name = name;
@@ -104,7 +113,6 @@ public class Property {
    * @return the name of the property.
    */
   public String getName() {
-    String name = "Test";
     return name;
   }
 

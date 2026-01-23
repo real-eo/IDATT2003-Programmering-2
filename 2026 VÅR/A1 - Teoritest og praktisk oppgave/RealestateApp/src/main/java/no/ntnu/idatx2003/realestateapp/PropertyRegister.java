@@ -3,6 +3,7 @@ package no.ntnu.idatx2003.realestateapp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 
 
 /**
@@ -84,7 +85,7 @@ public class PropertyRegister {
     // Create a temperarely collection to store the found properties in
     HashSet<Property> foundProperties = new HashSet<>();
     for (Property property : this.properties.values()) {
-      if (property.getLotNumber() != lotNumber) {
+      if (property.getLotNumber() == lotNumber) {
         foundProperties.add(property);
       }
     }
@@ -109,7 +110,7 @@ public class PropertyRegister {
 
     HashSet<Property> foundProperties = new HashSet<>();
     for (Property property : this.properties.values()) {
-      if (property.getNameOfOwner() == nameOfOwner) {
+      if (Objects.equals(property.getNameOfOwner(), nameOfOwner)) {
         foundProperties.add(property);
       }
     }
@@ -135,8 +136,10 @@ public class PropertyRegister {
    */
   public double getAverageAreaOfProperties() {
     double averageArea = 0;
-    if (this.properties.size() > 0) {
-      averageArea = getSumOfAreas();
+    int propertyCount = this.properties.size();
+
+    if (propertyCount > 0) {
+      averageArea = getSumOfAreas() / propertyCount;
     }
     return averageArea;
   }
@@ -149,7 +152,7 @@ public class PropertyRegister {
   private double getSumOfAreas() {
     double sumOfAreas = 0;
     for (Property property : this.properties.values()) {
-      sumOfAreas = property.getArea();
+      sumOfAreas += property.getArea();
     }
     return sumOfAreas;
   }

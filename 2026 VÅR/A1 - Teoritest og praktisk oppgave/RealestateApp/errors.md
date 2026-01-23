@@ -130,3 +130,66 @@ public boolean addProperty(Property property) {
     return success;
 }
 ```
+
+
+#### 9) Incorrect comparison operator
+'findAllPropertiesWithLotNumber(int lotNumber)' uses the 'ne' operator instead of the 'eq' operator
+```java
+public Iterator<Property> findAllPropertiesWithLotNumber(int lotNumber) {
+    // Create a temperarely collection to store the found properties in
+    HashSet<Property> foundProperties = new HashSet<>();
+    for (Property property : this.properties.values()) {
+        if (property.getLotNumber() != lotNumber) {                                     // ! BUG
+            foundProperties.add(property);
+        }
+    }
+    return foundProperties.iterator();
+}
+```
+
+#### 10) Reassignment to an inremental counter instead of adding
+'getSumOfAreas()' reassigns 'sumOfAreas' each iteration instead of adding to the sum 
+```java
+private double getSumOfAreas() {
+    double sumOfAreas = 0;
+    for (Property property : this.properties.values()) {
+        sumOfAreas = property.getArea();                                                // ! BUG
+    }
+    return sumOfAreas;
+}
+```
+
+#### 11) Missing division after summing area 
+'getAverageAreaOfProperties()' doesn't calculate the mean after summing 
+```java
+public double getAverageAreaOfProperties() {
+    double averageArea = 0;
+    if (this.properties.size() > 0) {
+        averageArea = getSumOfAreas() /* ! BUG */ ;                                                   
+    }
+    return averageArea;
+}
+```
+
+
+#### 12) String values are compared using '==', not 'equals()' 
+Strings and Boxed types should be compared using "equals()", not 'eq' operator.
+```java
+public Iterator<Property> findAllPropertiesByOwner(String nameOfOwner) {
+    // Guard conditions
+    if (nameOfOwner == null) {
+        throw new IllegalArgumentException("nameOfOwner cannot be null");
+    }
+    if (nameOfOwner.isBlank() ) {
+        throw new IllegalArgumentException("nameOfOwner cannot be blank or empty");
+    }
+
+    HashSet<Property> foundProperties = new HashSet<>();
+    for (Property property : this.properties.values()) {
+        if (property.getNameOfOwner() == nameOfOwner) {
+            foundProperties.add(property);
+        }
+    }
+    return foundProperties.iterator();
+}
+```

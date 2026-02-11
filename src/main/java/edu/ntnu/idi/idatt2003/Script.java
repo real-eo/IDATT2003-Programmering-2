@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt2003;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,6 @@ public class Script {
     }
 
     public List<TextCommand> getCommands() {
-        return commands;
+        return Collections.unmodifiableList(commands);
     }
 }

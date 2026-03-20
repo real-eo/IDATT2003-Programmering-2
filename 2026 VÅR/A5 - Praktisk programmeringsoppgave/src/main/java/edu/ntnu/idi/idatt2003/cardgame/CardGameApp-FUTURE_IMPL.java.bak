@@ -1,0 +1,151 @@
+package edu.ntnu.idi.idatt2003.cardgame;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+
+public class CardGameApp extends Application {
+
+    private final DeckOfCards deck = new DeckOfCards();
+    private HandOfCards hand;
+
+    // UI-komponenter vi oppdaterer
+    private TextArea handDisplay;
+
+    private TextField sumField;
+    private TextField heartsField;
+    private TextField flushField;
+    private TextField queenOfSpadesField;
+
+    @Override
+    public void start(Stage stage) {
+        // "Display the hand of cards here" (stor boks til venstre) 
+        handDisplay = new TextArea();
+        handDisplay.setEditable(false);
+        handDisplay.setWrapText(true);
+        handDisplay.setPrefColumnCount(30);
+        handDisplay.setPrefRowCount(12);
+        handDisplay.setText("Display the hand of cards here in\nwhatever way you like.");
+        handDisplay.setStyle(
+                "-fx-control-inner-background: #eeeeee;" +
+                "-fx-font-size: 14px;"
+        );
+
+        // Legg display i en "ramme" for å ligne wireframe
+        StackPane displayFrame = new StackPane(handDisplay);
+        displayFrame.setPadding(new Insets(10));
+        displayFrame.setStyle(
+                "-fx-border-color: #333333;" +
+                "-fx-border-width: 2;" +
+                "-fx-background-color: #f8f8f8;"
+        );
+        displayFrame.setPrefSize(520, 360);
+
+        // Knapper til høyre
+        Button dealButton = new Button("Deal hand");
+        dealButton.setPrefWidth(160);
+        dealButton.setPrefHeight(45);
+
+        Button checkButton = new Button("Check hand");
+        checkButton.setPrefWidth(160);
+        checkButton.setPrefHeight(45);
+
+        VBox buttonBox = new VBox(25, dealButton, checkButton);
+        buttonBox.setAlignment(Pos.TOP_CENTER);
+        buttonBox.setPadding(new Insets(30, 0, 0, 0));
+
+        // Toppseksjon: display + knapper
+        HBox top = new HBox(30, displayFrame, buttonBox);
+        top.setAlignment(Pos.TOP_LEFT);
+
+        // Nederst: resultatfelt (som på wireframe)
+        sumField = createSmallOutputField();
+        heartsField = createMediumOutputField();
+        flushField = createSmallOutputField();
+        queenOfSpadesField = createSmallOutputField();
+
+        HBox row1 = new HBox(12,
+                new Label("Sum of the faces:"), sumField,
+                spacer(25),
+                new Label("Cards of hearts:"), heartsField
+        );
+        row1.setAlignment(Pos.CENTER_LEFT);
+
+        HBox row2 = new HBox(12,
+                new Label("Flush:"), flushField,
+                spacer(25),
+                new Label("Queen of spades:"), queenOfSpadesField
+        );
+        row2.setAlignment(Pos.CENTER_LEFT);
+
+        VBox bottom = new VBox(12, row1, row2);
+        bottom.setPadding(new Insets(20, 0, 0, 0));
+
+        // Root layout 
+        BorderPane root = new BorderPane();
+        root.setPadding(new Insets(25));
+        root.setTop(top);
+        root.setCenter(bottom);
+
+        // Event handlers 
+        dealButton.setOnAction(e -> {
+            hand = deck.dealHand(5);                                                    // minimum 5 kort iht oppgavetekst
+            handDisplay.setText(hand.asString());
+
+            // Reset the analysis fields for the next "Check hand"
+            sumField.clear();
+            heartsField.clear();
+            flushField.clear();
+            queenOfSpadesField.clear();
+        });
+
+        checkButton.setOnAction(e -> {
+            if (hand == null) {
+                handDisplay.setText("Deal a hand first.");
+                return;
+            }
+
+            sumField.setText(String.valueOf(hand.sumFaces()));
+            heartsField.setText(hand.heartsAsStringOrNoHearts());
+            flushField.setText(hand.hasFiveCardFlush() ? "Yes" : "No");
+            queenOfSpadesField.setText(hand.containsQueenOfSpades() ? "Yes" : "No");
+        });
+
+        Scene scene = new Scene(root, 820, 520);
+        stage.setTitle("Card Game");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private static TextField createSmallOutputField() {
+        TextField tf = new TextField();
+        tf.setEditable(false);
+        tf.setPrefWidth(70);
+        return tf;
+    }
+
+    private static TextField createMediumOutputField() {
+        TextField tf = new TextField();
+        tf.setEditable(false);
+        tf.setPrefWidth(160);
+        return tf;
+    }
+
+    private static Region spacer(double width) {
+        Region r = new Region();
+        r.setMinWidth(width);
+        return r;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}

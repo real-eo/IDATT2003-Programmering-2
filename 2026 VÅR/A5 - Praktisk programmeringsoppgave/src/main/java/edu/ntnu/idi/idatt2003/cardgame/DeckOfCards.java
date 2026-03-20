@@ -30,6 +30,7 @@ public class DeckOfCards {
     }
 
     /**
+     * Oppgave 3:
      * Deals n random cards (without removing from the deck).
      * For "real" dealing, we need to remove the cards while dealing.
      */

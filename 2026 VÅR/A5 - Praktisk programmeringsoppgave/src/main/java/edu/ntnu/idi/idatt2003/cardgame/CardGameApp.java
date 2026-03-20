@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
 public class CardGameApp extends Application {
 
     private final DeckOfCards deck = new DeckOfCards();
@@ -38,7 +39,7 @@ public class CardGameApp extends Application {
 
         Button dealButton = new Button("Deal hand");
         dealButton.setOnAction(e -> {
-            hand = deck.dealHand(5);                                                    // minimum 5
+            hand = deck.dealHand(5);                                                    // Minimum 5
             handField.setText(hand.asString());
 
             // Reset the analysis fields for the next "Check hand"
